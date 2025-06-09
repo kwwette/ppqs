@@ -12,7 +12,7 @@ else:  # pragma: no cover
     import tomli as tomllib
 
 __author__ = "Karl Wette"
-__version__ = "1.0.2"
+__version__ = "2.0.0"
 
 
 class MissingPyProjectError(Exception):
