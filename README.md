@@ -117,12 +117,12 @@ script = [
 
 where:
 
-* `description` [optional]: description of the script which appears in `ppqs
+* `description` *(optional)*: description of the script which appears in `ppqs
   --help`. Default is `Run {name} script` where `name` is the script name.
 
-* `print_header` [optional]: If true, print a header before running each command
-  in the script. The header consists of the command to be run, centred on the
-  console and padded with `*`s. Default is false.
+* `print_header` *(optional)*: If true, print a header before running each
+  command in the script. The header consists of the command to be run, centred
+  on the console and padded with `*`s. Default is false.
 
 Note that commands are *not* passed to the shell, so shell features
 (e.g. wildcards, conditional statements) are not available. The recommended
