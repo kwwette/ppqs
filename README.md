@@ -107,8 +107,6 @@ command
 """
 
 [tool.ppqs.scripts.build]
-# default description = "Run build script"
-# default print-header = false
 script = [
     ["command1", "-v"],
     ["command2", "-q"],
@@ -123,6 +121,14 @@ where:
 * `print-header` *(optional)*: If true, print a header before running each
   command in the script. The header consists of the command to be run, centred
   on the console and padded with `*`s. Default is false.
+
+The default value of some options may be overridden in the
+`[tool.ppqs.defaults]` section, e.g.
+
+```
+[tool.ppqs.defaults]
+print-header = true
+```
 
 Note that commands are *not* passed to the shell, so shell features
 (e.g. wildcards, conditional statements) are not available. The recommended

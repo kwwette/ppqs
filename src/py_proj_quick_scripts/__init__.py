@@ -81,6 +81,14 @@ def parse_scripts(pyproject_path):
         msg = "does not contain a non-empty '[tool.ppqs.scripts]' section"
         raise InvalidScriptError(pyproject_path, msg)
 
+    # Get defaults
+    try:
+        default_script_print_header = bool(
+            pyproject_toml["tool"]["ppqs"]["defaults"]["print-header"]
+        )
+    except KeyError:
+        default_script_print_header = False
+
     # Parse scripts
     scripts = {}
     for script_name, script_toml in scripts_toml.items():
@@ -96,7 +104,7 @@ def parse_scripts(pyproject_path):
 
         # Create default description
         script_description = f"Run {script_name} script"
-        script_print_header = False
+        script_print_header = default_script_print_header
         script_commands_toml = script_toml
 
         if isinstance(script_toml, dict):
@@ -212,7 +220,7 @@ def run_script(script, argv, cwd):
         # Print header
         if script["print-header"]:
             cmd_str = " ".join(cmd)
-            print(f" {cmd_str} ".center(col_width, "*"))
+            print(f" ppqs: {cmd_str} ".center(col_width, "*"))
 
         # Run command
         retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)

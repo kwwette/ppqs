@@ -33,9 +33,11 @@ minversion = "6.0"
 addopts = "--cov=py_proj_quick_scripts --cov-report=term-missing --cov-fail-under=100"
 testpaths = ["test"]
 
+[tool.ppqs.defaults]
+print-header = true
+
 [tool.ppqs.scripts.init]
 description = "Initialise project"
-print-header = true
 script = """
 python -m pip install -r requirements-dev.txt
 pre-commit install
