@@ -220,14 +220,16 @@ def run_script(script, argv, cwd):
             raise SystemExit(retn.returncode)
 
 
-def cli(*argv):
+def regular_cli(argv):
+    """
+    Parse regular command line.
+    """
 
     # Parse scripts
     pyproject_path = find_pyproject()
     project_name, scripts = parse_scripts(pyproject_path)
 
     # Parse command line
-    argv = [str(a) for a in (argv or sys.argv[1:] or ["--help"])]
     if argv[0] in ("-h", "-help", "--help"):
         print_help(project_name, scripts)
         raise SystemExit(1)
@@ -237,3 +239,43 @@ def cli(*argv):
     else:
         cwd = pyproject_path.parent
         run_script(scripts[argv[0]], argv[1:], cwd)
+
+
+def cli(*argv):
+    """
+    Parse command line.
+    """
+
+    argv = [str(a) for a in (argv or sys.argv[1:] or ["--help"])]
+
+    if argv[0] == "--bash-completion":  # pragma: no cover
+
+        # Perform Bash completion
+        # - suppress any error output
+        try:
+            pyproject_path = find_pyproject()
+            _, scripts = parse_scripts(pyproject_path)
+            line = os.environ["COMP_LINE"]
+            words = line.split()
+            if line.endswith(" ") and len(words) == 1:
+
+                # Complete full script name, e.g.:
+                # $ ppqs <TAB><TAB>
+                for script_name in scripts:
+                    print(script_name)
+
+            if not line.endswith(" ") and len(words) == 2:
+
+                # Complete partial script name, e.g.:
+                # $ ppqs nam<TAB>
+                for script_name in scripts:
+                    if script_name.startswith(words[-1]):
+                        print(script_name)
+
+        except Exception:
+            pass
+
+    else:
+
+        # Parse regular command line
+        regular_cli(argv)
