@@ -32,3 +32,35 @@ ppqs = "py_proj_quick_scripts:cli"
 minversion = "6.0"
 addopts = "--cov=py_proj_quick_scripts --cov-report=term-missing --cov-fail-under=100"
 testpaths = ["test"]
+
+[tool.ppqs.scripts.init]
+description = "Initialise project"
+print_header = true
+script = """
+python -m pip install -r requirements-dev.txt
+pre-commit install
+python -m pip install -e .
+"""
+
+[tool.ppqs.scripts.lint]
+description = "Perform linting checks"
+script = """
+pre-commit run -a
+"""
+
+[tool.ppqs.scripts.build]
+description = "Build project"
+script = """
+git clean -Xdf
+python -m build
+"""
+
+[tool.ppqs.scripts.test]
+description = "Run tests"
+script = """
+pytest ...
+"""
+
+[tool.ppqs.scripts.clean]
+description = "Clean up build files"
+script = "git clean -Xdf"
