@@ -210,10 +210,12 @@ def run_script(script, argv, cwd):
     for command in script["commands"]:
         cmd = []
 
-        # Replace "..." in command with arguments
         for arg in command:
             if arg == "...":
+
+                # Replace "..." in command with arguments
                 cmd.extend(argv)
+
             else:
                 cmd.append(arg)
 
