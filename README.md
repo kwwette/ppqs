@@ -1,6 +1,6 @@
 # Python project quick scripts
 
-**Define simple development scripts in `pyproject.toml`**
+**Define simple project management scripts in `pyproject.toml`**
 
 Developing a Python project usually involves many tasks: setting up, installing
 prerequisites, building, testing, cleaning up build products, etc. It can be
@@ -78,10 +78,23 @@ print-something = "echo ..."
 ```
 
 may be run as
+
 ```bash
 $ ppqs print-something Hi
 Hi
 ```
+
+The following only applies to scripts defined as lists of lists: if a command
+argument is itself a list, it is concatenated into a path appropriate for the
+current operating system. For example,
+
+```toml
+[tool.ppqs.scripts]
+do-something = [["do-something-to", ["subdir", "afile"]]]
+```
+
+would run the command `do-something-to subdir/afile` on a Unix-based operating
+system.
 
 Scripts may also be defined in their own section, which permit a few options:
 
@@ -113,12 +126,25 @@ where:
   in the script. The header consists of the command to be run, centred on the
   console and padded with `*`s. Default is false.
 
-Commands are *not* parsed to the shell, so e.g. wildcards are not expanded. If
-the features of a shell script are needed (wildcards, conditional statements,
-etc.), one can write a helper script, e.g. `scripts/lots-to-do.py`, which may
+Note that commands are *not* passed to the shell, so shell features
+(e.g. wildcards, conditional statements) are not available. The recommended
+solution is to write a helper script, e.g. `scripts/lots-to-do.py`, which may
 then be called by `ppqs` as:
 
 ```toml
 [tool.ppqs.scripts]
 lots-to-do = [["python", "scripts/lots-to-do.py"]]
 ```
+
+## Bash completion
+
+`ppqs` support Bash command-line completion. Simply add the following command to
+your `~/.bashrc` file:
+
+```bash
+complete -C "ppqs --bash-completion" ppqs
+```
+
+Typing `ppdq ` and hitting `TAB` will then show scripts available for the
+current project. Typing part of a script name and hitting `TAB` will show
+matching script name(s), or else complete the full name if unambiguous.
