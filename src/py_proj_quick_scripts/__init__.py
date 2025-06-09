@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import subprocess
 import sys
 import textwrap
@@ -95,13 +96,16 @@ def parse_scripts(pyproject_path):
 
         # Create default description
         script_description = f"Run {script_name} script"
+        script_print_header = False
         script_commands_toml = script_toml
 
         if isinstance(script_toml, dict):
 
             # Check for invalid keys
             invalid_keys = [
-                k for k in script_toml.keys() if k not in ("description", "script")
+                k
+                for k in script_toml.keys()
+                if k not in ("description", "print_header", "script")
             ]
             if len(invalid_keys) > 0:
                 invalid_keys_str = "', '".join(invalid_keys)
@@ -111,6 +115,9 @@ def parse_scripts(pyproject_path):
                 raise InvalidScriptError(pyproject_path, msg)
 
             script_description = str(script_toml.get("description", script_description))
+            script_print_header = bool(
+                script_toml.get("print_header", script_print_header)
+            )
             script_commands_toml = script_toml["script"]
 
         msg = f"script '{script_name}' may be either a string or a list of lists"
@@ -152,6 +159,7 @@ def parse_scripts(pyproject_path):
 
         scripts[script_name] = {
             "description": script_description,
+            "print_header": script_print_header,
             "commands": script_commands,
         }
 
@@ -190,6 +198,7 @@ def run_script(script, argv, cwd):
     """
     Run a script.
     """
+    col_width = shutil.get_terminal_size().columns
     for command in script["commands"]:
         cmd = []
 
@@ -199,6 +208,11 @@ def run_script(script, argv, cwd):
                 cmd.extend(argv)
             else:
                 cmd.append(arg)
+
+        # Print header
+        if script["print_header"]:
+            cmd_str = " ".join(cmd)
+            print(f" {cmd_str} ".center(col_width, "*"))
 
         # Run command
         retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)
