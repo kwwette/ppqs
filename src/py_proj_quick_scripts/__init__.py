@@ -202,7 +202,7 @@ def print_help(project_name, scripts):
     )
 
 
-def run_script(script, argv, cwd):
+def run_script(script_name, script, argv, cwd):
     """
     Run a script.
     """
@@ -222,7 +222,7 @@ def run_script(script, argv, cwd):
         # Print header
         if script["print-header"]:
             cmd_str = " ".join(cmd)
-            print(f" ppqs: {cmd_str} ".center(col_width, "*"), flush=True)
+            print(f" ppqs {script_name}: {cmd_str} ".center(col_width, "*"), flush=True)
 
         # Run command
         retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)
@@ -248,7 +248,7 @@ def regular_cli(argv):
         raise InvalidScriptError(pyproject_path, msg)
     else:
         cwd = pyproject_path.parent
-        run_script(scripts[argv[0]], argv[1:], cwd)
+        run_script(argv[0], scripts[argv[0]], argv[1:], cwd)
 
 
 def cli(*argv):

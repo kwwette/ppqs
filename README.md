@@ -119,8 +119,8 @@ where:
   --help`. Default is `Run {name} script` where `name` is the script name.
 
 * `print-header` *(optional)*: If true, print a header before running each
-  command in the script. The header consists of the command to be run, centred
-  on the console and padded with `*`s. Default is false.
+  command in the script. The header consists of the script name and the command
+  to be run, centred on the console and padded with `*`s. Default is false.
 
 The default value of some options may be overridden in the
 `[tool.ppqs.defaults]` section, e.g.
