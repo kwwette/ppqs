@@ -14,7 +14,7 @@ test harness, etc. the project uses behind a simple interface.
 
 Here is an example of **ppqs** being used for its own project:
 
-```bash
+```
 $ ppqs --help
 Quick scripts for Python project: ppqs
 
@@ -79,7 +79,7 @@ print-something = "echo ..."
 
 may be run as
 
-```bash
+```
 $ ppqs print-something Hi
 Hi
 ```
