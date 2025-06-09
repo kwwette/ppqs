@@ -149,6 +149,6 @@ your `~/.bashrc` file:
 complete -C "ppqs --bash-completion" ppqs
 ```
 
-Typing `ppdq ` and hitting `TAB` will then show scripts available for the
+Typing `ppqs ` and hitting `TAB` will then show scripts available for the
 current project. Typing part of a script name and hitting `TAB` will show
 matching script name(s), or else complete the full name if unambiguous.
