@@ -1,0 +1,6 @@
+build>=1.2
+coverage>=7.6
+pre-commit>=3.7
+pytest-cov>=2.0
+pytest>=6.0
+setuptools>=64.0

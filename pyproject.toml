@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ppqs"
+version = "0.1"
+description = "Python project quick scripts"
+authors = [
+    { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
+]
+requires-python = ">=3.9"
+dependencies = [
+    "tomli>=1.1.0; python_version<'3.11'"
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/kwwette/ppqs"
+Issues = "https://github.com/kwwette/ppqs/issues"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov=py_proj_quick_scripts --cov-report=term-missing --cov-fail-under=100"
+testpaths = ["test"]
