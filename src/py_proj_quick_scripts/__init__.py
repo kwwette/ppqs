@@ -222,7 +222,7 @@ def run_script(script, argv, cwd):
         # Print header
         if script["print-header"]:
             cmd_str = " ".join(cmd)
-            print(f" ppqs: {cmd_str} ".center(col_width, "*"))
+            print(f" ppqs: {cmd_str} ".center(col_width, "*"), flush=True)
 
         # Run command
         retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)
