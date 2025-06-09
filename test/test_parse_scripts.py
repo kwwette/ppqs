@@ -51,7 +51,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Run init script",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -70,7 +70,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Run init script",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [
                             ["pip", "install", "-r", "requirements.txt"],
                             ["pre-commit", "install"],
@@ -116,7 +116,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Initialise project",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -147,7 +147,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Run init script",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -158,7 +158,7 @@ from . import in_dir, write_file
             """
             [tool.ppqs.scripts.init]
             description = "Initialise project"
-            print_header = true
+            print-header = true
             script = [
                 ["pip", "install", "-r", "requirements.txt"],
             ]
@@ -167,7 +167,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Initialise project",
-                        "print_header": True,
+                        "print-header": True,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -187,7 +187,7 @@ from . import in_dir, write_file
                 {
                     "init": {
                         "description": "Initialise project",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [
                             ["pip", "install", "-r", "requirements.txt"],
                             ["pre-commit", "install"],
@@ -218,7 +218,7 @@ from . import in_dir, write_file
                 {
                     "paths": {
                         "description": "Run paths script",
-                        "print_header": False,
+                        "print-header": False,
                         "commands": [["echo", str(Path("a", "b"))]],
                     }
                 }

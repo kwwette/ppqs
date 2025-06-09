@@ -35,7 +35,7 @@ testpaths = ["test"]
 
 [tool.ppqs.scripts.init]
 description = "Initialise project"
-print_header = true
+print-header = true
 script = """
 python -m pip install -r requirements-dev.txt
 pre-commit install

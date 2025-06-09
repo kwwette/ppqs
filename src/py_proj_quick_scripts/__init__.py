@@ -105,7 +105,7 @@ def parse_scripts(pyproject_path):
             invalid_keys = [
                 k
                 for k in script_toml.keys()
-                if k not in ("description", "print_header", "script")
+                if k not in ("description", "print-header", "script")
             ]
             if len(invalid_keys) > 0:
                 invalid_keys_str = "', '".join(invalid_keys)
@@ -116,7 +116,7 @@ def parse_scripts(pyproject_path):
 
             script_description = str(script_toml.get("description", script_description))
             script_print_header = bool(
-                script_toml.get("print_header", script_print_header)
+                script_toml.get("print-header", script_print_header)
             )
             script_commands_toml = script_toml["script"]
 
@@ -159,7 +159,7 @@ def parse_scripts(pyproject_path):
 
         scripts[script_name] = {
             "description": script_description,
-            "print_header": script_print_header,
+            "print-header": script_print_header,
             "commands": script_commands,
         }
 
@@ -210,7 +210,7 @@ def run_script(script, argv, cwd):
                 cmd.append(arg)
 
         # Print header
-        if script["print_header"]:
+        if script["print-header"]:
             cmd_str = " ".join(cmd)
             print(f" {cmd_str} ".center(col_width, "*"))
 

@@ -101,14 +101,14 @@ Scripts may also be defined in their own section, which permit a few options:
 ```toml
 [tool.ppqs.scripts.init]
 description = "Initialise project"
-print_header = true
+print-header = true
 script = """
 command
 """
 
 [tool.ppqs.scripts.build]
 # default description = "Run build script"
-# default print_header = false
+# default print-header = false
 script = [
     ["command1", "-v"],
     ["command2", "-q"],
@@ -120,7 +120,7 @@ where:
 * `description` *(optional)*: description of the script which appears in `ppqs
   --help`. Default is `Run {name} script` where `name` is the script name.
 
-* `print_header` *(optional)*: If true, print a header before running each
+* `print-header` *(optional)*: If true, print a header before running each
   command in the script. The header consists of the command to be run, centred
   on the console and padded with `*`s. Default is false.
 

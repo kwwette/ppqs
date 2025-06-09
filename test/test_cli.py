@@ -17,7 +17,7 @@ def pyproject_path(tmp_path):
     name = "test"
     [tool.ppqs.scripts.exit]
     description = "Exits"
-    print_header = true
+    print-header = true
     script = "python -c 'import sys; sys.exit(1)'"
     [tool.ppqs.scripts.echo]
     description = "Echoes"
