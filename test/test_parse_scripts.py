@@ -220,6 +220,9 @@ from . import in_dir, write_file
     ],
 )
 def test_parse_scripts(tmp_path, script_toml, expectation):
+    """
+    Test parse_scripts().
+    """
 
     pyproject_path = tmp_path / "pyproject.toml"
     pyproject_toml = f"""

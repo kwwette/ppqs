@@ -1,6 +1,8 @@
 import os
 import re
+import subprocess
 import sys
+import textwrap
 from pathlib import Path
 
 if sys.version_info >= (3, 11):  # pragma: no cover
@@ -154,3 +156,70 @@ def parse_scripts(pyproject_path):
         }
 
     return project_name, scripts
+
+
+def print_help(project_name, scripts):
+    """
+    Print help.
+    """
+    script_names = ",".join(scripts.keys())
+    max_script_name_len = max(len(script_name) for script_name in scripts)
+    list_of_scripts = "\n".join(
+        "  "
+        + script_name.ljust(max_script_name_len, " ")
+        + "  "
+        + script["description"][0].upper()
+        + script["description"][1:]
+        for script_name, script in scripts.items()
+    )
+    print(
+        textwrap.dedent(
+            f"""\
+            Quick scripts for Python project: {project_name}
+
+            Usage: ppqs {{{script_names}}}
+
+            Scripts:
+            """
+        )
+        + list_of_scripts
+    )
+
+
+def run_script(script, argv, cwd):
+    """
+    Run a script.
+    """
+    for command in script["commands"]:
+        cmd = []
+
+        # Replace "..." in command with arguments
+        for arg in command:
+            if arg == "...":
+                cmd.extend(argv)
+            else:
+                cmd.append(arg)
+
+        # Run command
+        retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)
+        if retn.returncode != 0:
+            raise SystemExit(retn.returncode)
+
+
+def cli(*argv):
+
+    # Parse scripts
+    pyproject_path = find_pyproject()
+    project_name, scripts = parse_scripts(pyproject_path)
+
+    # Parse command line
+    argv = [str(a) for a in (argv or sys.argv[1:] or ["--help"])]
+    if argv[0] in ("-h", "-help", "--help"):
+        print_help(project_name, scripts)
+        raise SystemExit(1)
+    elif argv[0] not in scripts:
+        msg = f"unknown script '{argv[0]}'"
+        raise InvalidScriptError(pyproject_path, msg)
+    else:
+        cwd = pyproject_path.parent
+        run_script(scripts[argv[0]], argv[1:], cwd)

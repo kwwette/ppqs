@@ -25,6 +25,9 @@ classifiers = [
 Homepage = "https://github.com/kwwette/ppqs"
 Issues = "https://github.com/kwwette/ppqs/issues"
 
+[project.scripts]
+ppqs = "py_proj_quick_scripts:cli"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--cov=py_proj_quick_scripts --cov-report=term-missing --cov-fail-under=100"
