@@ -113,8 +113,6 @@ script = [
     ["command1", "-v"],
     ["command2", "-q"],
 ]
-"""
-
 ```
 
 where:
