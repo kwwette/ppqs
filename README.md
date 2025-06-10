@@ -84,17 +84,30 @@ $ ppqs print-something Hi
 Hi
 ```
 
-The following only applies to scripts defined as lists of lists: if a command
-argument is itself a list, it is concatenated into a path appropriate for the
-current operating system. For example,
+The following only applies to scripts defined as lists of lists:
 
-```toml
-[tool.ppqs.scripts]
-do-something = [["do-something-to", ["subdir", "afile"]]]
-```
+* If a command argument is itself a list, it is concatenated into a path
+  appropriate for the current operating system. For example,
 
-would run the command `do-something-to subdir/afile` on a Unix-based operating
-system.
+  ```toml
+  [tool.ppqs.scripts]
+  do-something = [["do-something-to", ["subdir", "afile"]]]
+  ```
+
+  would run the command `do-something-to subdir/afile` on a Unix-based operating
+  system.
+
+  If the last element of the path contains a wildcard (`*`), the path is
+  expanded at runtime into a list of files/directories matching the wildcard
+  expression. For example, if the directory `subdir/` contained the files
+  `file1.txt`, `file2.txt`, and `file3.dat`, then:
+
+  ```toml
+  [tool.ppqs.scripts]
+  do-something = [["do-something-to", ["subdir", "*.txt"]]]
+  ```
+
+  would run the command `do-something-to subdir/file1.txt subdir/file2.txt`
 
 Scripts may also be defined in their own section, which permit a few options:
 
@@ -130,10 +143,9 @@ The default value of some options may be overridden in the
 print-header = true
 ```
 
-Note that commands are *not* passed to the shell, so shell features
-(e.g. wildcards, conditional statements) are not available. The recommended
-solution is to write a helper script, e.g. `scripts/lots-to-do.py`, which may
-then be called by `ppqs` as:
+Note that commands are *not* passed to the shell, so shell features are not
+available. The recommended solution is to write a helper script,
+e.g. `scripts/lots-to-do.py`, which may then be called by `ppqs` as:
 
 ```toml
 [tool.ppqs.scripts]

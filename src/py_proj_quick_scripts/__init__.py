@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import shutil
@@ -151,11 +152,14 @@ def parse_scripts(pyproject_path):
 
                         # List arguments are treated as paths
                         arg_path = Path(*arg)
+                        if any("*" in a for a in arg[:-1]):
+                            msg2 = f"path argument '{arg_path}' may contain wildcards only in the last element"
+                            raise InvalidScriptError(pyproject_path, msg2)
                         if arg_path.is_absolute():
                             msg2 = f"path argument '{arg_path}' must be a relative path"
                             raise InvalidScriptError(pyproject_path, msg2)
 
-                        script_line.append(str(arg_path))
+                        script_line.append(arg_path)
 
                     else:
                         script_line.append(arg)
@@ -211,7 +215,16 @@ def run_script(script_name, script, argv, cwd):
         cmd = []
 
         for arg in command:
-            if arg == "...":
+            if isinstance(arg, Path):
+                if "*" in arg.parts[-1]:
+
+                    # Expand wildcards in last path element
+                    cmd.extend(sorted(glob.glob(str(arg), recursive=False)))
+
+                else:
+                    cmd.append(str(arg))
+
+            elif arg == "...":
 
                 # Replace "..." in command with arguments
                 cmd.extend(argv)

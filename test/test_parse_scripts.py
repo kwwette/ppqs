@@ -219,11 +219,42 @@ from . import in_dir, write_file
                     "paths": {
                         "description": "Run paths script",
                         "print-header": False,
-                        "commands": [["echo", str(Path("a", "b"))]],
+                        "commands": [["echo", Path("a", "b")]],
                     }
                 }
             ),
             id="list script with relative path",
+        ),
+        pytest.param(
+            """
+            [tool.ppqs.scripts]
+            paths = [
+                ["echo", ["*", "b"]],
+            ]
+            """,
+            pytest.raises(
+                InvalidScriptError,
+                match="may contain wildcards only in the last element",
+            ),
+            id="list script with path and invalid wildcard",
+        ),
+        pytest.param(
+            """
+            [tool.ppqs.scripts]
+            paths = [
+                ["echo", ["a", "*.txt"]],
+            ]
+            """,
+            nullcontext(
+                {
+                    "paths": {
+                        "description": "Run paths script",
+                        "print-header": False,
+                        "commands": [["echo", Path("a", "*.txt")]],
+                    }
+                }
+            ),
+            id="list script with path and valid wildcard",
         ),
     ],
 )
