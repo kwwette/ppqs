@@ -24,12 +24,6 @@ repos:
       - id: isort
         args: ["--profile", "black"]
 
-  - repo: https://github.com/jsh9/pydoclint
-    rev: 0.6.7
-    hooks:
-    - id: pydoclint
-      args: [--style=google, --allow-init-docstring=True, --skip-checking-raises=True]
-
   - repo: https://github.com/psf/black
     rev: 25.1.0
     hooks:
