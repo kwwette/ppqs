@@ -1,0 +1,20 @@
+version = 1
+
+[[annotations]]
+path = [
+    ".github/**",
+    ".gitignore",
+    ".pre-commit-config.yaml",
+    "README.md",
+    "pyproject.toml",
+    "requirements-dev.txt",
+]
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = [
+    "src/**/*.py",
+    "test/**/*.py",
+]
+SPDX-License-Identifier = "MIT"

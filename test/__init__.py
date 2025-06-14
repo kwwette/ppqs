@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Karl Wette
+#
+# SPDX-License-Identifier: MIT
+
 import os
 import textwrap
 from contextlib import contextmanager

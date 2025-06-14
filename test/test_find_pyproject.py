@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Karl Wette
+#
+# SPDX-License-Identifier: MIT
+
 import pytest
 
 from py_proj_quick_scripts import (
