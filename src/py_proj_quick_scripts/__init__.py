@@ -243,6 +243,11 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
                 run_script(scripts, script_name_r, argv, cwd, has_been_run)
             continue
 
+        elif cmd_exec == "python":
+
+            # Use same Python as ppqs to run Python scripts
+            cmd.append(sys.executable)
+
         else:
             cmd.append(cmd_exec)
 
