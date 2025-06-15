@@ -25,7 +25,7 @@ repos:
         args: ["--profile", "black"]
 
   - repo: https://github.com/kwwette/auto-reuse.git
-    rev: v0.5
+    rev: v0.6
     hooks:
       - id: auto-reuse
 
