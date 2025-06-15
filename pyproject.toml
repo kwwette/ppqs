@@ -62,7 +62,7 @@ pre-commit run -a
 [tool.ppqs.scripts.build]
 description = "Build project"
 script = """
-git clean -Xdf
+ppqs clean
 python -m build
 """
 
