@@ -39,11 +39,11 @@ def pyproject_path(tmp_path):
         ["python", "-c", "import sys; print(*sys.argv[1:])", ["subdir", "*.txt"]],
     ]
     [tool.ppqs.scripts.greeting]
-    script = "echo Hello"
+    script = "echo Hello ..."
     [tool.ppqs.scripts.farewell]
     script = '''
-    ppqs greeting
-    ppqs greeting
+    ppqs greeting friend!
+    ppqs greeting comrade!
     echo Goodbye
     '''
     """
@@ -131,7 +131,7 @@ def test_recursion(pyproject_path, capfd):
     with in_dir(pyproject_path.parent):
         cli("farewell")
         captured = capfd.readouterr()
-        assert captured.out == "Hello\nGoodbye\n"
+        assert captured.out == "Hello friend!\nGoodbye\n"
         assert captured.err == ""
 
         with pytest.raises(InvalidScriptError):

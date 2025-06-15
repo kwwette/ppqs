@@ -233,24 +233,6 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
     for command in script["commands"]:
         cmd = []
 
-        cmd_exec = command.pop(0)
-        if cmd_exec == "ppqs":
-
-            # Recursively run script
-            # - silently ignore scripts which have already been run
-            script_name_r = command.pop(0)
-            if script_name_r not in has_been_run:
-                run_script(scripts, script_name_r, argv, cwd, has_been_run)
-            continue
-
-        elif cmd_exec == "python":
-
-            # Use same Python as ppqs to run Python scripts
-            cmd.append(sys.executable)
-
-        else:
-            cmd.append(cmd_exec)
-
         for arg in command:
             if isinstance(arg, Path):
                 if "*" in arg.parts[-1]:
@@ -268,6 +250,20 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
 
             else:
                 cmd.append(arg)
+
+        if cmd[0] == "ppqs":
+
+            # Recursively run script
+            # - silently ignore scripts which have already been run
+            script_name_r = cmd[1]
+            if script_name_r not in has_been_run:
+                run_script(scripts, script_name_r, cmd[2:], cwd, has_been_run)
+            continue
+
+        elif cmd[0] == "python":
+
+            # Use same Python as ppqs to run Python scripts
+            cmd[0] = sys.executable
 
         # Print header
         if script["print-header"]:
