@@ -247,25 +247,35 @@ def run_script(script_name, script, argv, cwd):
             raise SystemExit(retn.returncode)
 
 
-def regular_cli(argv):
+def bash_completion():  # pragma: no cover
     """
-    Parse regular command line.
+    Perform Bash command-line completion.
     """
 
     # Parse scripts
     pyproject_path = find_pyproject()
-    project_name, scripts = parse_scripts(pyproject_path)
+    _, scripts = parse_scripts(pyproject_path)
 
-    # Parse command line
-    if argv[0] in ("-h", "-help", "--help"):
-        print_help(project_name, scripts)
-        raise SystemExit(1)
-    elif argv[0] not in scripts:
-        msg = f"unknown script '{argv[0]}'"
-        raise InvalidScriptError(pyproject_path, msg)
-    else:
-        cwd = pyproject_path.parent
-        run_script(argv[0], scripts[argv[0]], argv[1:], cwd)
+    # Get current command line
+    line = os.environ["COMP_LINE"]
+    words = line.split()
+
+    if line.endswith(" ") and len(words) == 1:
+
+        # Complete full script name, e.g.:
+        # $ ppqs <TAB><TAB>
+        for script_name in scripts:
+            print(script_name)
+        return
+
+    if not line.endswith(" ") and len(words) == 2:
+
+        # Complete partial script name, e.g.:
+        # $ ppqs nam<TAB>
+        for script_name in scripts:
+            if script_name.startswith(words[-1]):
+                print(script_name)
+        return
 
 
 def cli(*argv):
@@ -277,32 +287,25 @@ def cli(*argv):
 
     if argv[0] == "--bash-completion":  # pragma: no cover
 
-        # Perform Bash completion
-        # - suppress any error output
+        # Perform Bash command-line completion, suppress any errors
         try:
-            pyproject_path = find_pyproject()
-            _, scripts = parse_scripts(pyproject_path)
-            line = os.environ["COMP_LINE"]
-            words = line.split()
-            if line.endswith(" ") and len(words) == 1:
-
-                # Complete full script name, e.g.:
-                # $ ppqs <TAB><TAB>
-                for script_name in scripts:
-                    print(script_name)
-
-            if not line.endswith(" ") and len(words) == 2:
-
-                # Complete partial script name, e.g.:
-                # $ ppqs nam<TAB>
-                for script_name in scripts:
-                    if script_name.startswith(words[-1]):
-                        print(script_name)
-
+            bash_completion()
         except Exception:
             pass
 
     else:
 
-        # Parse regular command line
-        regular_cli(argv)
+        # Parse scripts
+        pyproject_path = find_pyproject()
+        project_name, scripts = parse_scripts(pyproject_path)
+
+        # Parse command line
+        if argv[0] in ("-h", "-help", "--help"):
+            print_help(project_name, scripts)
+            raise SystemExit(1)
+        elif argv[0] not in scripts:
+            msg = f"unknown script '{argv[0]}'"
+            raise InvalidScriptError(pyproject_path, msg)
+        else:
+            cwd = pyproject_path.parent
+            run_script(argv[0], scripts[argv[0]], argv[1:], cwd)
