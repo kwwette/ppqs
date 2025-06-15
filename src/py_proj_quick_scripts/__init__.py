@@ -276,7 +276,7 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
             print(header, flush=True)
 
         # Run command
-        retn = subprocess.run(cmd, stdin=subprocess.DEVNULL, shell=False, cwd=cwd)
+        retn = subprocess.run(cmd, shell=False, cwd=cwd)
         if retn.returncode != 0:
             raise SystemExit(retn.returncode)
 
