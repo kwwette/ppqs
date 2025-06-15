@@ -69,7 +69,7 @@ python -m build
 [tool.ppqs.scripts.test]
 description = "Run tests"
 script = """
-pytest ...
+python -m pytest ...
 """
 
 [tool.ppqs.scripts.clean]
