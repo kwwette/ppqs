@@ -244,21 +244,14 @@ from . import in_dir, write_file
         ),
         pytest.param(
             """
-            [tool.ppqs.scripts]
-            paths = [
-                ["echo", ["a", "*.txt"]],
-            ]
+            [tool.ppqs.scripts.no-script]
+            script = "ppqs script-does-not-exist"
             """,
-            nullcontext(
-                {
-                    "paths": {
-                        "description": "Run paths script",
-                        "print-header": False,
-                        "commands": [["echo", Path("a", "*.txt")]],
-                    }
-                }
+            pytest.raises(
+                InvalidScriptError,
+                match="does not exist",
             ),
-            id="list script with path and valid wildcard",
+            id="recursive script does not exist",
         ),
     ],
 )

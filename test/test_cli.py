@@ -38,6 +38,14 @@ def pyproject_path(tmp_path):
     script = [
         ["python", "-c", "import sys; print(*sys.argv[1:])", ["subdir", "*.txt"]],
     ]
+    [tool.ppqs.scripts.greeting]
+    script = "echo Hello"
+    [tool.ppqs.scripts.farewell]
+    script = '''
+    ppqs greeting
+    ppqs greeting
+    echo Goodbye
+    '''
     """
 
     write_file(pyproject_path, pyproject_toml)
@@ -113,3 +121,18 @@ def test_echo_wildcard(pyproject_path, capfd):
         captured = capfd.readouterr()
         assert captured.out == "subdir/a.txt subdir/b.txt\n".replace("/", os.sep)
         assert captured.err == ""
+
+
+def test_recursion(pyproject_path, capfd):
+    """
+    Test recursive script running.
+    """
+
+    with in_dir(pyproject_path.parent):
+        cli("farewell")
+        captured = capfd.readouterr()
+        assert captured.out == "Hello\nGoodbye\n"
+        assert captured.err == ""
+
+        with pytest.raises(InvalidScriptError):
+            cli("no-script")

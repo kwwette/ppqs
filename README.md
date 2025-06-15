@@ -84,6 +84,36 @@ $ ppqs print-something Hi
 Hi
 ```
 
+`ppqs` can recursively run its own scripts, however it will only run any script
+once. For example, given the following script:
+
+```toml
+[tool.ppqs.scripts]
+task-init = """
+echo task init
+"""
+task-a = """
+ppqs task-init
+echo task 1
+"""
+task-b = """
+ppqs task-init
+echo task 2
+"""
+all-tasks = """
+ppqs task-a
+ppqs task-b
+"""
+```
+
+running `ppqs all-tasks` will only run `ppqs task-init` once:
+```
+$ ppqs all-tasks
+task init
+task 1
+task 2
+```
+
 The following only applies to scripts defined as lists of lists:
 
 * If a command argument is itself a list, it is concatenated into a path

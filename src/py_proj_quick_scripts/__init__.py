@@ -178,6 +178,16 @@ def parse_scripts(pyproject_path):
             "commands": script_commands,
         }
 
+    # Check that recursively run scripts exist
+    for script in scripts.values():
+        for command in script["commands"]:
+            cmd_exec = command[0]
+            if cmd_exec == "ppqs":
+                script_name_r = command[1]
+                if script_name_r not in scripts:
+                    msg = f"script {script_name_r}' does not exist"
+                    raise InvalidScriptError(pyproject_path, msg)
+
     return project_name, scripts
 
 
@@ -209,13 +219,32 @@ def print_help(project_name, scripts):
     )
 
 
-def run_script(script_name, script, argv, cwd):
+def run_script(scripts, script_name, argv, cwd, has_been_run):
     """
     Run a script.
     """
+
     col_width = shutil.get_terminal_size().columns
+
+    # Mark script has having been run
+    has_been_run.add(script_name)
+
+    script = scripts[script_name]
     for command in script["commands"]:
         cmd = []
+
+        cmd_exec = command.pop(0)
+        if cmd_exec == "ppqs":
+
+            # Recursively run script
+            # - silently ignore scripts which have already been run
+            script_name_r = command.pop(0)
+            if script_name_r not in has_been_run:
+                run_script(scripts, script_name_r, argv, cwd, has_been_run)
+            continue
+
+        else:
+            cmd.append(cmd_exec)
 
         for arg in command:
             if isinstance(arg, Path):
@@ -308,4 +337,5 @@ def cli(*argv):
             raise InvalidScriptError(pyproject_path, msg)
         else:
             cwd = pyproject_path.parent
-            run_script(argv[0], scripts[argv[0]], argv[1:], cwd)
+            has_been_run = set()
+            run_script(scripts, argv[0], argv[1:], cwd, has_been_run)
