@@ -72,6 +72,16 @@ script = """
 python -m pytest ...
 """
 
+[tool.ppqs.scripts.upload]
+description = "Upload package"
+script = [
+    ["ppqs", "test"],
+    ["ppqs", "build"],
+    ["twine", "upload", ["dist", "*"]],
+    ["git", "push", "origin"],
+    ["git", "push", "origin", "--tags"],
+]
+
 [tool.ppqs.scripts.clean]
 description = "Clean up build files"
 script = "git clean -Xdf"
