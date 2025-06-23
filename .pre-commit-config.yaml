@@ -16,13 +16,6 @@ repos:
     rev: v0.11.13
     hooks:
       - id: ruff-check
-        args: [--exit-non-zero-on-fix, --show-fixes]
-
-  - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
-    hooks:
-      - id: isort
-        args: ["--profile", "black"]
 
   - repo: https://github.com/kwwette/auto-reuse.git
     rev: v0.6
