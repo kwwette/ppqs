@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Test find_pyproject()."""
+
 import pytest
 
 from py_proj_quick_scripts import (
@@ -13,9 +15,7 @@ from . import in_dir, write_file
 
 
 def test_find_pyproject(tmp_path):
-    """
-    Test find_pyproject().
-    """
+    """Test find_pyproject()."""
 
     with in_dir(tmp_path):
         with pytest.raises(MissingPyProjectError):

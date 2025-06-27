@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Python project quick scripts."""
+
 import glob
 import os
 import re
@@ -20,19 +22,16 @@ __author__ = "Karl Wette"
 
 
 class MissingPyProjectError(Exception):
-    """
-    Raise if 'pyproject.toml' could not be found.
-    """
+    """Raise if 'pyproject.toml' could not be found."""
 
     pass
 
 
 class InvalidScriptError(Exception):
-    """
-    Raise for invalid 'pyproject.toml' script errors.
-    """
+    """Raise for invalid 'pyproject.toml' script errors."""
 
     def __init__(self, pyproject_path, msg):
+        """Initialise exception."""
         self.pyproject_path = pyproject_path
         self.msg = msg
         super().__init__(self.msg)
@@ -42,9 +41,7 @@ class InvalidScriptError(Exception):
 
 
 def find_pyproject():
-    """
-    Look for pyproject.toml in current/parent directories.
-    """
+    """Look for pyproject.toml in current/parent directories."""
 
     # Start in the current directory
     current_dir = starting_dir = Path.cwd()
@@ -70,9 +67,7 @@ def find_pyproject():
 
 
 def parse_scripts(pyproject_path):
-    """
-    Parse scripts from pyproject.toml.
-    """
+    """Parse scripts from pyproject.toml."""
 
     # Read pyproject.toml
     pyproject_toml = tomllib.load(pyproject_path.open("rb"))
@@ -192,9 +187,7 @@ def parse_scripts(pyproject_path):
 
 
 def print_help(project_name, scripts):
-    """
-    Print help.
-    """
+    """Print help."""
     script_names = ",".join(scripts.keys())
     max_script_name_len = max(len(script_name) for script_name in scripts)
     list_of_scripts = "\n".join(
@@ -220,9 +213,7 @@ def print_help(project_name, scripts):
 
 
 def run_script(scripts, script_name, argv, cwd, has_been_run):
-    """
-    Run a script.
-    """
+    """Run a script."""
 
     col_width = shutil.get_terminal_size().columns
 
@@ -278,9 +269,7 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
 
 
 def bash_completion():  # pragma: no cover
-    """
-    Perform Bash command-line completion.
-    """
+    """Perform Bash command-line completion."""
 
     # Parse scripts
     pyproject_path = find_pyproject()
@@ -309,9 +298,7 @@ def bash_completion():  # pragma: no cover
 
 
 def cli(*argv):
-    """
-    Parse command line.
-    """
+    """Parse command line."""
 
     argv = [str(a) for a in (argv or sys.argv[1:] or ["--help"])]
 

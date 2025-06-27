@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Test command-line interface."""
+
 import os
 
 import pytest
@@ -13,9 +15,7 @@ from . import in_dir, write_file
 
 @pytest.fixture
 def pyproject_path(tmp_path):
-    """
-    Write pyproject.toml for command-line tests.
-    """
+    """Write pyproject.toml for command-line tests."""
 
     pyproject_path = tmp_path / "pyproject.toml"
     pyproject_toml = """
@@ -54,9 +54,7 @@ def pyproject_path(tmp_path):
 
 
 def test_help(pyproject_path):
-    """
-    Test command line help.
-    """
+    """Test command line help."""
 
     with in_dir(pyproject_path.parent):
         with pytest.raises(SystemExit):
@@ -64,9 +62,7 @@ def test_help(pyproject_path):
 
 
 def test_notest(pyproject_path):
-    """
-    Test a non-existent test.
-    """
+    """Test a non-existent test."""
 
     with in_dir(pyproject_path.parent):
         with pytest.raises(InvalidScriptError):
@@ -74,9 +70,7 @@ def test_notest(pyproject_path):
 
 
 def test_exit(pyproject_path):
-    """
-    Test `exit` script.
-    """
+    """Test `exit` script."""
 
     with in_dir(pyproject_path.parent):
         with pytest.raises(SystemExit):
@@ -84,9 +78,7 @@ def test_exit(pyproject_path):
 
 
 def test_echo(pyproject_path, capfd):
-    """
-    Test `echo` script.
-    """
+    """Test `echo` script."""
 
     with in_dir(pyproject_path.parent):
         cli("echo", "Hello")
@@ -96,9 +88,7 @@ def test_echo(pyproject_path, capfd):
 
 
 def test_echo_path(pyproject_path, capfd):
-    """
-    Test `echo-path` script.
-    """
+    """Test `echo-path` script."""
 
     with in_dir(pyproject_path.parent):
         cli("echo-path")
@@ -108,9 +98,7 @@ def test_echo_path(pyproject_path, capfd):
 
 
 def test_echo_wildcard(pyproject_path, capfd):
-    """
-    Test `echo-wildcard` script.
-    """
+    """Test `echo-wildcard` script."""
 
     with in_dir(pyproject_path.parent) as wd:
         subdir = wd / "subdir"
@@ -124,9 +112,7 @@ def test_echo_wildcard(pyproject_path, capfd):
 
 
 def test_recursion(pyproject_path, capfd):
-    """
-    Test recursive script running.
-    """
+    """Test recursive script running."""
 
     with in_dir(pyproject_path.parent):
         cli("farewell")

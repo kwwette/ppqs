@@ -34,11 +34,18 @@ show-fixes = true
 
 [tool.ruff.lint]
 select = [
+    "D1", "D2", "D4",
     "E4", "E7", "E9",
     "EM",
     "F",
     "I",
 ]
+ignore = [
+    "D105", "D202",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
