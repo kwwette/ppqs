@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ppqs"
-version = "2.3.1"
+version = "2.4.0"
 description = "Python project quick scripts"
 authors = [
     { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
