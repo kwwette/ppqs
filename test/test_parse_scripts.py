@@ -58,6 +58,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Run init script",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -77,6 +78,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Run init script",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [
                             ["pip", "install", "-r", "requirements.txt"],
                             ["pre-commit", "install"],
@@ -123,6 +125,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Initialise project",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -154,6 +157,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Run init script",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -174,6 +178,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Initialise project",
                         "print-header": True,
+                        "bash-complete-file-glob": None,
                         "commands": [["pip", "install", "-r", "requirements.txt"]],
                     }
                 }
@@ -194,6 +199,7 @@ from . import in_dir, write_file
                     "init": {
                         "description": "Initialise project",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [
                             ["pip", "install", "-r", "requirements.txt"],
                             ["pre-commit", "install"],
@@ -225,6 +231,7 @@ from . import in_dir, write_file
                     "paths": {
                         "description": "Run paths script",
                         "print-header": False,
+                        "bash-complete-file-glob": None,
                         "commands": [["echo", Path("a", "b")]],
                     }
                 }
@@ -254,6 +261,24 @@ from . import in_dir, write_file
                 match="does not exist",
             ),
             id="recursive script does not exist",
+        ),
+        pytest.param(
+            """
+            [tool.ppqs.scripts.test]
+            bash-complete-file-glob = "test/**/test_*.py"
+            script = "run-tests ..."
+            """,
+            nullcontext(
+                {
+                    "test": {
+                        "description": "Run test script",
+                        "print-header": False,
+                        "bash-complete-file-glob": "test/**/test_*.py",
+                        "commands": [["run-tests", "..."]],
+                    }
+                }
+            ),
+            id="string script with complete file glob",
         ),
     ],
 )

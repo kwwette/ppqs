@@ -194,3 +194,18 @@ complete -C "ppqs --bash-completion" ppqs
 Typing `ppqs ` and hitting `TAB` will then show scripts available for the
 current project. Typing part of a script name and hitting `TAB` will show
 matching script name(s), or else complete the full name if unambiguous.
+
+By default, Bash completion will only complete names of scripts. Each script may
+additionally define a glob pattern, given as the option
+`bash-complete-file-glob` under `[tool.ppqs.scripts.<script-name>]`. Files
+matching that pattern (relative to the project root directory) will then be
+available as completions for additional arguments to the script. Example:
+
+```
+[tool.ppqs.scripts.test]
+bash-complete-file-glob = "test/**/test_*.py"
+script = "run-tests ..."
+```
+
+This script will complete on any files matching `test/**/test_*.py`, and pass
+the file names to the command `run-tests`.

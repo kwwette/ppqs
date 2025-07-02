@@ -87,6 +87,12 @@ def parse_scripts(pyproject_path):
         )
     except KeyError:
         default_script_print_header = False
+    try:
+        default_bash_complete_file_glob = bool(
+            pyproject_toml["tool"]["ppqs"]["defaults"]["bash-complete-file-glob"]
+        )
+    except KeyError:
+        default_bash_complete_file_glob = None
 
     # Parse scripts
     scripts = {}
@@ -104,6 +110,7 @@ def parse_scripts(pyproject_path):
         # Create default description
         script_description = f"Run {script_name} script"
         script_print_header = default_script_print_header
+        script_bash_complete_file_glob = default_bash_complete_file_glob
         script_commands_toml = script_toml
 
         if isinstance(script_toml, dict):
@@ -112,7 +119,13 @@ def parse_scripts(pyproject_path):
             invalid_keys = [
                 k
                 for k in script_toml.keys()
-                if k not in ("description", "print-header", "script")
+                if k
+                not in (
+                    "description",
+                    "print-header",
+                    "bash-complete-file-glob",
+                    "script",
+                )
             ]
             if len(invalid_keys) > 0:
                 invalid_keys_str = "', '".join(invalid_keys)
@@ -125,6 +138,11 @@ def parse_scripts(pyproject_path):
             script_print_header = bool(
                 script_toml.get("print-header", script_print_header)
             )
+            script_bash_complete_file_glob = script_toml.get(
+                "bash-complete-file-glob", script_bash_complete_file_glob
+            )
+            if script_bash_complete_file_glob is not None:
+                script_bash_complete_file_glob = str(script_bash_complete_file_glob)
             script_commands_toml = script_toml["script"]
 
         msg = f"script '{script_name}' may be either a string or a list of lists"
@@ -170,6 +188,7 @@ def parse_scripts(pyproject_path):
         scripts[script_name] = {
             "description": script_description,
             "print-header": script_print_header,
+            "bash-complete-file-glob": script_bash_complete_file_glob,
             "commands": script_commands,
         }
 
@@ -295,6 +314,34 @@ def bash_completion():  # pragma: no cover
             if script_name.startswith(words[-1]):
                 print(script_name)
         return
+
+    script_name = words[1]
+    script_bash_complete_file_glob = scripts[script_name]["bash-complete-file-glob"]
+    if script_bash_complete_file_glob is not None:
+
+        # Generate list of files to complete on
+        project_dir = pyproject_path.parent
+        files = [
+            str(f.relative_to(project_dir))
+            for f in project_dir.glob(script_bash_complete_file_glob)
+        ]
+
+        if line.endswith(" "):
+
+            # Complete full script name, e.g.:
+            # $ ppqs script <TAB><TAB>
+            for file_name in files:
+                print(file_name)
+            return
+
+        else:
+
+            # Complete partial script name, e.g.:
+            # $ ppqs script fil<TAB>
+            for file_name in files:
+                if file_name.startswith(words[-1]):
+                    print(file_name)
+            return
 
 
 def cli(*argv):
