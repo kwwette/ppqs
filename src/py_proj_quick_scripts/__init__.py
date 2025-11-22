@@ -229,6 +229,7 @@ def print_help(project_name, scripts):
             """
         )
         + list_of_scripts
+        + f"\n\nppqs version: {__version__}"
     )
 
 
