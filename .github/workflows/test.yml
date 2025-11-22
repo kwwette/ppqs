@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Initialise project
         uses: nick-fields/retry@v2
         with:
           timeout_minutes: 5
@@ -40,32 +40,28 @@ jobs:
           command: |
             python -m pip install --upgrade pip
             python -m pip install .
+            ppqs init
             python -m venv $RUNNER_TEMP/venv
             source $RUNNER_TEMP/venv/bin/activate
             python -m pip install --upgrade pip
             python -m pip install .
+            ppqs init
 
-      - name: Init
-        run: |
-          ppqs init
-          source $RUNNER_TEMP/venv/bin/activate
-          ppqs init
-
-      - name: Lint
+      - name: Perform linting checks
         run: |
           ppqs lint
 
-      - name: Build
+      - name: Build project
         run: |
           ppqs build
 
-      - name: Test
+      - name: Run tests
         run: |
           ppqs test --no-cov
           source $RUNNER_TEMP/venv/bin/activate
           ppqs test
 
-      - name: Clean
+      - name: Clean up build files
         run: |
           ppqs clean
 
