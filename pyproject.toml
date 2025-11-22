@@ -9,7 +9,7 @@ description = "Python project quick scripts"
 authors = [
     { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "tomli>=1.1.0; python_version<'3.11'"
 ]
