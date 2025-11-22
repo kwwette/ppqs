@@ -4,7 +4,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ppqs"
-version = "2.5.0"
 description = "Python project quick scripts"
 authors = [
     { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
@@ -20,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/kwwette/ppqs"
@@ -27,6 +27,9 @@ Issues = "https://github.com/kwwette/ppqs/issues"
 
 [project.scripts]
 ppqs = "py_proj_quick_scripts:cli"
+
+[tool.setuptools.dynamic]
+version = {attr = "py_proj_quick_scripts.__version__"}
 
 [tool.ruff]
 fix = true
