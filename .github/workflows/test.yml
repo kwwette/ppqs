@@ -41,9 +41,15 @@ jobs:
             set -e
             python -m pip install --upgrade pip
             python -m pip install .
+            python -m venv $RUNNER_TEMP/venv
+            source $RUNNER_TEMP/venv/bin/activate
+            python -m pip install --upgrade pip
+            python -m pip install .
 
       - name: Init
         run: |
+          ppqs init
+          source $RUNNER_TEMP/venv/bin/activate
           ppqs init
 
       - name: Lint
@@ -56,6 +62,8 @@ jobs:
 
       - name: Test
         run: |
+          ppqs test --no-cov
+          source $RUNNER_TEMP/venv/bin/activate
           ppqs test
 
       - name: Clean
