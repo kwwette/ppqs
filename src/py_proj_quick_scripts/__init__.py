@@ -272,8 +272,14 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
 
         elif cmd[0] == "python":
 
-            # Use same Python as ppqs to run Python scripts
+            # By default, use same Python as ppqs to run Python scripts
             cmd[0] = sys.executable
+
+            # If virtual environment is present, try to use its Python
+            if "VIRTUAL_ENV" in os.environ:
+                venv_python = Path(os.environ["VIRTUAL_ENV"]) / "bin" / "python"
+                if venv_python.exists() and os.access(venv_python, os.X_OK):
+                    cmd[0] = str(venv_python)
 
         # Print header
         if script["print-header"]:
