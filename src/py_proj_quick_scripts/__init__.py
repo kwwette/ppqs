@@ -210,6 +210,13 @@ def print_help(project_name, scripts):
     """Print help."""
     script_names = ",".join(scripts.keys())
     max_script_name_len = max(len(script_name) for script_name in scripts)
+    help_header = textwrap.dedent(f"""\
+        Quick scripts for Python project: {project_name}
+
+        Usage: ppqs {{{script_names}}}
+
+        Scripts:
+        """)
     list_of_scripts = "\n".join(
         "  "
         + script_name.ljust(max_script_name_len, " ")
@@ -218,19 +225,7 @@ def print_help(project_name, scripts):
         + script["description"][1:]
         for script_name, script in scripts.items()
     )
-    print(
-        textwrap.dedent(
-            f"""\
-            Quick scripts for Python project: {project_name}
-
-            Usage: ppqs {{{script_names}}}
-
-            Scripts:
-            """
-        )
-        + list_of_scripts
-        + f"\n\nppqs version: {__version__}"
-    )
+    print(help_header + list_of_scripts + f"\n\nppqs version: {__version__}")
 
 
 def run_script(scripts, script_name, argv, cwd, has_been_run):
