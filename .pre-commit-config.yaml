@@ -13,16 +13,21 @@ repos:
         files: ^\.gitattributes$|^\.gitignore$|^requirements-dev\.txt$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.0
+    rev: v0.15.5
     hooks:
       - id: ruff-check
 
-  - repo: https://github.com/kwwette/auto-reuse.git
-    rev: v0.6
+  - repo: https://github.com/assorted-pre-commit-hooks/copyright
+    rev: v0.7
     hooks:
-      - id: auto-reuse
+      - id: copyright
 
   - repo: https://github.com/psf/black
-    rev: 26.1.0
+    rev: 26.3.1
     hooks:
       - id: black
+
+  - repo: https://github.com/assorted-pre-commit-hooks/version-tag
+    rev: v0.1
+    hooks:
+      - id: version-tag
