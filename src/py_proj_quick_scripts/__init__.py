@@ -273,7 +273,7 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
             cmd[0] = sys.executable
 
             # If virtual environment is present, try to use its Python
-            if "VIRTUAL_ENV" in os.environ:
+            if "VIRTUAL_ENV" in os.environ:  # pragma: no cover
                 venv_python = Path(os.environ["VIRTUAL_ENV"]) / "bin" / "python"
                 if venv_python.exists() and os.access(venv_python, os.X_OK):
                     cmd[0] = str(venv_python)
