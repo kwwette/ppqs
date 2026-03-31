@@ -15,12 +15,12 @@ repos:
         files: ^\.gitattributes$|^\.gitignore$|^requirements-dev\.txt$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.7
+    rev: v0.15.8
     hooks:
       - id: ruff-check
 
   - repo: https://github.com/assorted-pre-commit-hooks/copyright
-    rev: v0.10
+    rev: v0.11
     hooks:
       - id: copyright
 
