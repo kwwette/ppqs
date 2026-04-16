@@ -19,7 +19,7 @@ else:  # pragma: no cover
     import tomli as tomllib
 
 __author__ = "Karl Wette"
-__version__ = "2.5.2"
+__version__ = "2.6.0"
 
 
 class MissingPyProjectError(Exception):
