@@ -8,7 +8,7 @@ import os
 
 import pytest
 
-from py_proj_quick_scripts import InvalidScriptError, cli
+from py_proj_quick_scripts import InvalidScriptCallError, InvalidScriptError, cli
 
 from . import in_dir, write_file
 
@@ -119,6 +119,9 @@ def test_recursion(pyproject_path, capfd):
         captured = capfd.readouterr()
         assert captured.out == "Hello friend!\nGoodbye\n"
         assert captured.err == ""
+
+        with pytest.raises(InvalidScriptCallError):
+            cli("farewell", "someone")
 
         with pytest.raises(InvalidScriptError):
             cli("no-script")

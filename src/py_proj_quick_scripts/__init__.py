@@ -25,8 +25,6 @@ __version__ = "2.5.2"
 class MissingPyProjectError(Exception):
     """Raise if 'pyproject.toml' could not be found."""
 
-    pass
-
 
 class InvalidScriptError(Exception):
     """Raise for invalid 'pyproject.toml' script errors."""
@@ -39,6 +37,10 @@ class InvalidScriptError(Exception):
 
     def __str__(self):
         return f"{self.pyproject_path}: {self.msg}"
+
+
+class InvalidScriptCallError(InvalidScriptError):
+    """Raise for invalid calls of 'pyproject.toml' scripts."""
 
 
 def find_pyproject():
@@ -228,15 +230,25 @@ def print_help(project_name, scripts):
     print(help_header + list_of_scripts + f"\n\nppqs version: {__version__}")
 
 
-def run_script(scripts, script_name, argv, cwd, has_been_run):
+def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
     """Run a script."""
 
     col_width = shutil.get_terminal_size().columns
 
-    # Mark script has having been run
+    # Mark script as having been run
     has_been_run.add(script_name)
 
+    # Get script
     script = scripts[script_name]
+
+    # Check that script was correctly passed arguments
+    script_takes_argv = any("..." in command for command in script["commands"])
+    if not script_takes_argv and len(argv) > 0:
+        msg = "script '{}' does not take arguments ('{}')".format(
+            script_name, "', '".join(argv)
+        )
+        raise InvalidScriptCallError(pyproject_path, msg)
+
     for command in script["commands"]:
         cmd = []
 
@@ -264,7 +276,9 @@ def run_script(scripts, script_name, argv, cwd, has_been_run):
             # - silently ignore scripts which have already been run
             script_name_r = cmd[1]
             if script_name_r not in has_been_run:
-                run_script(scripts, script_name_r, cmd[2:], cwd, has_been_run)
+                run_script(
+                    pyproject_path, scripts, script_name_r, cmd[2:], cwd, has_been_run
+                )
             continue
 
         elif cmd[0] == "python":
@@ -376,4 +390,4 @@ def cli(*argv):
         else:
             cwd = pyproject_path.parent
             has_been_run = set()
-            run_script(scripts, argv[0], argv[1:], cwd, has_been_run)
+            run_script(pyproject_path, scripts, argv[0], argv[1:], cwd, has_been_run)
