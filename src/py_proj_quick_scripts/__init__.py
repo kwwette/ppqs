@@ -257,7 +257,9 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
                 if "*" in arg.parts[-1]:
 
                     # Expand wildcards in last path element
-                    cmd.extend(sorted(glob.glob(str(arg), recursive=False)))
+                    cmd.extend(
+                        sorted(glob.glob(str(arg), root_dir=cwd, recursive=False))
+                    )
 
                 else:
                     cmd.append(str(arg))
