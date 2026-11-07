@@ -1,4 +1,4 @@
-build>=1.2
+build>=1.6.1
 coverage>=7.17.1
 pre-commit>=4.7.0
 pytest-cov>=7.1.0
