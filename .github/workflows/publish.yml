@@ -4,13 +4,13 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
+  workflow_dispatch: null
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
-    environment: ${{ github.event_name == 'push' && 'pypi' || '' }}
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'testpypi' || 'pypi' }}
 
     permissions:
       id-token: write
@@ -60,5 +60,11 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event_name == 'push' }}
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
-          dry-run: ${{ github.event_name == 'workflow_dispatch' }}
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
