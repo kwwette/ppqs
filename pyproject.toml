@@ -99,8 +99,8 @@ script = [
     ["ppqs", "lint"],
     ["ppqs", "build"],
     ["ppqs", "test"],
-    ["git", "commit", "--allow-empty", "-m", "Version {1}"],
-    ["git", "tag", "-a", "-m", "Version {1}", "v{1}"],
+    ["git", "commit", "--allow-empty", "-m", "Version {1}.{2}.{3}"],
+    ["git", "tag", "-a", "-m", "Version {1}.{2}.{3}", "v{1}.{2}.{3}"],
 ]
 
 [tool.ppqs.scripts.upload]
