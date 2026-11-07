@@ -39,11 +39,13 @@ def pyproject_path(tmp_path):
         ["python", "-c", "import sys; print(*sys.argv[1:])", ["subdir", "*.txt"]],
     ]
     [tool.ppqs.scripts.greeting]
-    script = "echo Hello ..."
+    script = "echo Hello {1}!"
+    [tool.ppqs.scripts.zero-greeting]
+    script = "echo Hello {0}!"
     [tool.ppqs.scripts.farewell]
     script = '''
-    ppqs greeting friend!
-    ppqs greeting comrade!
+    ppqs greeting friend
+    ppqs greeting comrade
     echo Goodbye
     '''
     """
@@ -109,6 +111,25 @@ def test_echo_wildcard(pyproject_path, capfd):
         captured = capfd.readouterr()
         assert captured.out == "subdir/a.txt subdir/b.txt\n".replace("/", os.sep)
         assert captured.err == ""
+
+
+def test_args(pyproject_path, capfd):
+    """Test argument parsing."""
+
+    with in_dir(pyproject_path.parent):
+        cli("greeting", "friend")
+        captured = capfd.readouterr()
+        assert captured.out == "Hello friend!\n"
+        assert captured.err == ""
+
+        with pytest.raises(InvalidScriptError):
+            cli("greeting")
+
+        with pytest.raises(InvalidScriptError):
+            cli("greeting", "magnificent", "friend")
+
+        with pytest.raises(InvalidScriptError):
+            cli("zero-greeting", "nothing")
 
 
 def test_recursion(pyproject_path, capfd):

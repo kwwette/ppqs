@@ -242,22 +242,19 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
     # Get script
     script = scripts[script_name]
 
-    # Check that script was correctly passed arguments
-    script_takes_argv = any("..." in command for command in script["commands"])
-    if not script_takes_argv and len(argv) > 0:
-        msg = "script '{}' does not take arguments ('{}')".format(
-            script_name, "', '".join(argv)
-        )
-        raise InvalidScriptCallError(pyproject_path, msg)
-
-    for command in script["commands"]:
+    # First pass of commands
+    argv_remaining = argv.copy()
+    commands = script["commands"]
+    cmds = []
+    for command in commands:
         cmd = []
-
         for arg in command:
-            if isinstance(arg, Path):
-                if "*" in arg.parts[-1]:
 
-                    # Expand wildcards in last path element
+            # Handle path arguments
+            if isinstance(arg, Path):
+
+                # Expand wildcards in last path element
+                if "*" in arg.parts[-1]:
                     cmd.extend(
                         sorted(glob.glob(str(arg), root_dir=cwd, recursive=False))
                     )
@@ -265,14 +262,58 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
                 else:
                     cmd.append(str(arg))
 
-            elif arg == "...":
+                continue
 
-                # Replace "..." in command with arguments
-                cmd.extend(argv)
+            # Replace positional arguments from command
+            for arg_match in re.finditer(r"{(\d+)}", arg):
+                arg_i = int(arg_match.group(1))
+                if arg_i < 1:
+                    msg = (
+                        "script '{}' arguments must be {{1}}, {{2}}, etc.,"
+                        + " instead found {{{}}}"
+                    ).format(script_name, arg_i)
+                    raise InvalidScriptCallError(pyproject_path, msg)
+                if arg_i > len(argv):
+                    msg = (
+                        "script '{}' takes at least {} argument(s), "
+                        + "but only {} argument(s) were given"
+                    ).format(script_name, arg_i, len(argv))
+                    raise InvalidScriptCallError(pyproject_path, msg)
+                arg = arg.replace(arg_match.group(0), argv[arg_i - 1])
+                argv_remaining[arg_i - 1] = None
 
-            else:
-                cmd.append(arg)
+            cmd.append(arg)
 
+        cmds.append(cmd)
+
+    # Second pass of command
+    commands = cmds
+    cmds = []
+    for command in commands:
+        cmd = []
+        for arg in command:
+
+            # Replace "..." with remaining command-line arguments
+            if arg == "...":
+                cmd.extend([argr for argr in argv_remaining if argr is not None])
+                argv_remaining = [None] * len(argv_remaining)
+
+                continue
+
+            cmd.append(arg)
+
+        cmds.append(cmd)
+
+    # Check for any remaining arguments
+    argv_used = sum(argr is None for argr in argv_remaining)
+    if argv_used != len(argv):
+        msg = "script '{}' takes {} argument(s), but {} argument(s) were given".format(
+            script_name, argv_used, len(argv)
+        )
+        raise InvalidScriptCallError(pyproject_path, msg)
+
+    # Execute commands
+    for cmd in cmds:
         if cmd[0] == "ppqs":
 
             # Recursively run script

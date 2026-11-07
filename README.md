@@ -69,19 +69,22 @@ clean = [
 ]
 ```
 
-If a script contains an ellipsis (`...`) it is replaced with any additional
-arguments passed to `ppqs`. For example, the following script:
+If a script argument contains a number inside curly brackets (`{1}`, `{2}`,
+etc.) it is replaced with the corresponding argument passed to `ppqs`. If a
+script contains an ellipsis (`...`) it is replaced with any remaining arguments
+(i.e. not used by a curly-bracket replacement). For example, the following
+script:
 
 ```toml
 [tool.ppqs.scripts]
-print-something = "echo ..."
+print-something = "echo {1}, and ..."
 ```
 
 may be run as
 
 ```
-$ ppqs print-something Hi
-Hi
+$ ppqs print-something Hello goodbye again
+Hello, and goodbye again
 ```
 
 `ppqs` can recursively run its own scripts, however it will only run any script

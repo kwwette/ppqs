@@ -31,8 +31,3 @@ repos:
     hooks:
       - id: black
         args: [--target-version=py311]
-
-  - repo: https://github.com/assorted-pre-commit-hooks/version-tag
-    rev: v0.1
-    hooks:
-      - id: version-tag

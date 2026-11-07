@@ -48,6 +48,7 @@ jobs:
             python -m pip install --upgrade pip
             python -m pip install .
             ppqs init
+            ppqs version
 
       - name: Perform linting checks
         run: |
