@@ -7,7 +7,11 @@ on:
   workflow_dispatch: null
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   publish:
+    needs: test
     runs-on: ubuntu-latest
 
     environment: ${{ github.event_name == 'workflow_dispatch' && 'testpypi' || 'pypi' }}
@@ -43,17 +47,9 @@ jobs:
             ppqs init
             ppqs version
 
-      - name: Perform linting checks
-        run: |
-          ppqs lint
-
       - name: Build project
         run: |
           ppqs build
-
-      - name: Run tests
-        run: |
-          ppqs test --no-cov
 
       - name: Validate metadata
         run: |
