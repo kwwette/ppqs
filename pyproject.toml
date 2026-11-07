@@ -89,8 +89,9 @@ python -m pytest ...
 [tool.ppqs.scripts.upload]
 description = "Upload package"
 script = [
-    ["ppqs", "test"],
+    ["ppqs", "lint"],
     ["ppqs", "build"],
+    ["ppqs", "test"],
     ["git", "push", "origin"],
     ["git", "push", "origin", "--tags"],
 ]
