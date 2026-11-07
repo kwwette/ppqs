@@ -5,11 +5,6 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Simulate publication without uploading to PyPI'
-        type: boolean
-        default: true
 
 jobs:
   publish:
@@ -66,4 +61,4 @@ jobs:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          dry-run: ${{ github.event.inputs.dry_run == 'true' }}
+          dry-run: ${{ github.event_name == 'workflow_dispatch' }}
