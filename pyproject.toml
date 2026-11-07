@@ -21,6 +21,8 @@ license-files = [
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
 ]
 dynamic = ["version"]
 
