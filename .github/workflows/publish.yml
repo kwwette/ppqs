@@ -54,7 +54,7 @@ jobs:
           twine check dist/*
 
       - name: Attest build
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v2
         with:
           subject-path: "dist/*"
 
