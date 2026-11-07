@@ -87,6 +87,22 @@ script = """
 python -m pytest ...
 """
 
+[tool.ppqs.scripts.version]
+description = "Print the current package version"
+script = "python -m setuptools_scm"
+
+[tool.ppqs.scripts.tag]
+description = "Tag a release"
+script = [
+    ["git", "status"],
+    ["git", "diff", "--quiet", "--exit-code"],
+    ["ppqs", "lint"],
+    ["ppqs", "build"],
+    ["ppqs", "test"],
+    ["git", "commit", "--allow-empty", "-m", "Version {1}"],
+    ["git", "tag", "-a", "-m", "Version {1}", "v{1}"],
+]
+
 [tool.ppqs.scripts.upload]
 description = "Upload package"
 script = [
