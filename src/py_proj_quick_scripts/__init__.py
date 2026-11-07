@@ -12,10 +12,15 @@ import subprocess
 import sys
 import textwrap
 import tomllib
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 __author__ = "Karl Wette"
-__version__ = "2.6.1"
+
+try:
+    __version__ = version("ppqs")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 
 class MissingPyProjectError(Exception):

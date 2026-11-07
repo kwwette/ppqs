@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64.0"]
+requires = ["setuptools>=80", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -28,8 +28,9 @@ Issues = "https://github.com/kwwette/ppqs/issues"
 [project.scripts]
 ppqs = "py_proj_quick_scripts:cli"
 
-[tool.setuptools.dynamic]
-version = {attr = "py_proj_quick_scripts.__version__"}
+[tool.setuptools_scm]
+scm.git.pre_parse = "fail_on_shallow"
+local_scheme = "node-and-timestamp"
 
 [tool.ruff]
 fix = true
