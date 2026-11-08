@@ -7,6 +7,7 @@
 import glob
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -154,7 +155,7 @@ def parse_scripts(pyproject_path):
 
             # Parse a script as a string
             script_commands = [
-                line.split()
+                shlex.split(line)
                 for line in script_commands_toml.splitlines()
                 if len(line.strip()) > 0
             ]

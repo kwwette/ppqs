@@ -40,8 +40,11 @@ command errors, the remainder of the script is aborted.
 
 Scripts are defined in `pyproject.toml` under the `[tool.ppqs.scripts]`
 section. Script names may contain only lowercase letters (`[a-z]`) and dashes
-(`-`). Scripts may be single or multi-line strings: commands are separated by
-newlines, and command arguments are separated by spaces.
+(`-`).
+
+Scripts may be single or multi-line strings. Command arguments are separated by
+spaces, but quotes may be used for arguments containing whitespace, similar to
+the Unix shell. In multi-line strings, commands are separated by newlines.
 
 ```toml
 [tool.ppqs.scripts]
@@ -51,7 +54,7 @@ command
 """
 build = """
 command1 -v
-command2 -q
+command2 -q 'a string with whitespace'
 """
 ```
 
