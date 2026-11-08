@@ -8,6 +8,7 @@ on:
     branches:
       - "*"
   workflow_call: null
+  workflow_dispatch: null
 
 jobs:
   test:
