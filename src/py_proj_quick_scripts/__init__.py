@@ -251,22 +251,12 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
         cmd = []
         for arg in command:
 
-            # Handle path arguments
-            if isinstance(arg, Path):
-
-                # Expand wildcards in last path element
-                if "*" in arg.parts[-1]:
-                    cmd.extend(
-                        sorted(glob.glob(str(arg), root_dir=cwd, recursive=False))
-                    )
-
-                else:
-                    cmd.append(str(arg))
-
-                continue
+            # Convert to string
+            arg_type = type(arg)
+            arg_str = str(arg)
 
             # Replace positional arguments from command
-            for arg_match in re.finditer(r"{(\d+)}", arg):
+            for arg_match in re.finditer(r"{(\d+)}", arg_str):
                 arg_i = int(arg_match.group(1))
                 if arg_i < 1:
                     msg = (
@@ -280,10 +270,10 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
                         + "but only {} argument(s) were given"
                     ).format(script_name, arg_i, len(argv))
                     raise InvalidScriptCallError(pyproject_path, msg)
-                arg = arg.replace(arg_match.group(0), argv[arg_i - 1])
+                arg_str = arg_str.replace(arg_match.group(0), argv[arg_i - 1])
                 argv_remaining[arg_i - 1] = None
 
-            cmd.append(arg)
+            cmd.append(arg_type(arg_str))
 
         cmds.append(cmd)
 
@@ -314,7 +304,28 @@ def run_script(pyproject_path, scripts, script_name, argv, cwd, has_been_run):
         raise InvalidScriptCallError(pyproject_path, msg)
 
     # Execute commands
-    for cmd in cmds:
+    for command in cmds:
+
+        # Final pass of commands
+        cmd = []
+        for arg in command:
+
+            # Only process path arguments
+            if isinstance(arg, Path):
+
+                # Expand wildcards in last path element
+                if "*" in arg.parts[-1]:
+                    cmd.extend(
+                        sorted(glob.glob(str(arg), root_dir=cwd, recursive=False))
+                    )
+
+                else:
+                    cmd.append(str(arg))
+
+                continue
+
+            cmd.append(arg)
+
         if cmd[0] == "ppqs":
 
             # Recursively run script

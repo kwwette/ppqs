@@ -48,6 +48,11 @@ def pyproject_path(tmp_path):
     ppqs greeting comrade
     echo Goodbye
     '''
+    [tool.ppqs.scripts.makefile]
+    script = [
+        ["python", "-c", "from pathlib import Path; Path('{1}/{2}').write_text('{3}')"],
+        ["cat", ["{1}", "*"]],
+    ]
     """
 
     write_file(pyproject_path, pyproject_toml)
@@ -146,3 +151,16 @@ def test_recursion(pyproject_path, capfd):
 
         with pytest.raises(InvalidScriptError):
             cli("no-script")
+
+
+def test_makefile(pyproject_path, capfd, tmp_path):
+    """Test making a file and then finding it with wildcards."""
+
+    with in_dir(pyproject_path.parent):
+        makefile_path = tmp_path / "makefile"
+        makefile_path.mkdir(parents=True, exist_ok=True)
+
+        cli("makefile", str(makefile_path), "test.txt", "Good morning!")
+        captured = capfd.readouterr()
+        assert captured.out == "Good morning!"
+        assert captured.err == ""
