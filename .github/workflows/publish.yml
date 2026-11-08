@@ -25,7 +25,7 @@ jobs:
       SETUPTOOLS_SCM_OVERRIDES_FOR_PPQS: '{local_scheme="no-local-version"}'
 
     steps:
-      - name: Checkout source code
+      - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
